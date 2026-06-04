@@ -4,8 +4,6 @@ GPT-style biological sequence modeling pipeline for **pre-miRNA sequence generat
 
 This project explores how language-modeling techniques can be applied to biological sequence data. It includes data preprocessing, sequence filtering, tokenizer training, GPT-style pretraining, human-specific fine-tuning, generation, and biological feature extraction.
 
-> Portfolio focus: **LLMs for biology, Hugging Face workflows, sequence tokenization, generative modeling, and scientific ML pipelines.**
-
 ## Motivation
 
 Biological sequences can be represented as token sequences, making them a natural fit for language-modeling approaches. In this project, a GPT-style model is trained to learn structure in pre-miRNA sequences and generate biologically plausible candidates.
