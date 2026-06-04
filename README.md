@@ -1,52 +1,176 @@
-# microRNA_GPT
+# microRNA-GPT
 
-This repository contains scripts and tools for collecting, filtering, and extracting biological features from microRNA data, as well as for training GPT models on this data.
+GPT-style biological sequence modeling pipeline for **pre-miRNA sequence generation and analysis**.
 
-## Data Collection and Preprocessing
+This project explores how language-modeling techniques can be applied to biological sequence data. It includes data preprocessing, sequence filtering, tokenizer training, GPT-style pretraining, human-specific fine-tuning, generation, and biological feature extraction.
 
-### Preprocessing Pipeline Overview
+> Portfolio focus: **LLMs for biology, Hugging Face workflows, sequence tokenization, generative modeling, and scientific ML pipelines.**
 
-The `preprocess.py` script contain the data collection, filtering, and feature extraction process. It gets data paths configurations specified in `preprocess_config.ini` for easy modification of input and output paths without needing to alter the script directly.
+## Motivation
 
-### `utils.py`
+Biological sequences can be represented as token sequences, making them a natural fit for language-modeling approaches. In this project, a GPT-style model is trained to learn structure in pre-miRNA sequences and generate biologically plausible candidates.
 
-The `utils.py` file contains essential functions used by `preprocess.py`, including data collection routines, filtering mechanisms, and feature extraction algorithms.
+The project focuses on the complete modeling workflow:
 
-### Configuration with `preprocess_config.ini`
+```text
+Raw miRNA Data
+      ↓
+Preprocessing + Filtering
+      ↓
+Tokenizer Training
+      ↓
+GPT-Style Pretraining
+      ↓
+Human-Specific Fine-Tuning
+      ↓
+Sequence Generation
+      ↓
+Feature Extraction + Evaluation
+```
 
-Paths for input data and where to save the output data
+## Main Capabilities
 
-### Running the Preprocessing Pipeline
+- Data collection and preprocessing for microRNA datasets
+- Configurable preprocessing through `preprocess_config.ini`
+- Sequence filtering and biological feature extraction
+- Custom tokenizer training for nucleotide sequences
+- GPT-style model training on preprocessed sequence data
+- Human-specific fine-tuning
+- Sequence generation from trained models
+- Post-generation feature extraction for biological analysis
 
-1. Configure `preprocess_config.ini` with the appropriate paths and settings for your data and processing needs.
-2. Run the pipeline:
-    ```bash
-    python preprocess.py
-    ```
-    This will collect data as specified, apply filters, extract features, and output the processed datasets ready for machine learning model training.
+## Repository Structure
 
-### Tokenization
-After that, we run in **colab** the code that is in the file 'tokenization.ipynb', where we create and train the tokenizer on the data (bastian + mirGeneDB) to use later.
+```text
+.
+├── Data_source/                              # input/source data
+├── Data_output/                              # processed outputs
+├── preprocess.py                            # preprocessing pipeline
+├── preprocess_config.ini                    # paths and preprocessing settings
+├── utils.py                                 # helper functions
+├── tokenization.ipynb                       # tokenizer training
+├── Pretrained_mature_star_after_preprocess.ipynb
+├── Human_fine_tune_star_mature.ipynb
+├── preprocess_clusters.ipynb
+├── Extract_features_only_nts.ipynb
+└── README.md
+```
 
-### Training notebooks
-Then, we use 'GPT_pretrained_mature_star_after_preprocess.ipynb', this script use the tokenizer we've trained, (with or without flanks), then we train a model based on bastian data and then second train on mirGeneDB data.
+## Workflow
 
-After that, we can split the data to train and test. We do this using 'preprocess_cluster.ipynb', where we remove duplicates of pre-mirna and create clusters, based on mature similarity > 80%. We take some of the clusters to test - we use inly the human data from this cluseters to be the test.
+### 1. Configure preprocessing
 
-The script we can use now is 'Human_fine_tune_star_mature.ipynb', there we do fine tune on the previous model, using human data (with or without flanks). We can generate sequences - full seq or with completions of mature/star - using the test data from the previous script.
+Edit `preprocess_config.ini` and set the input/output paths.
 
-Lastly, we use the script 'Extract_features_only_nts.ipynb' to extract features from the generated sequences.
+```ini
+[input]
+# path_to_raw_data = ...
 
-## [Placeholder for Training Scripts]
+[output]
+# path_to_processed_data = ...
+```
 
-Training scripts and methodologies will be added here. These scripts will detail the process for training GPT models on the prepared microRNA dataset, including model configuration, training parameters, and evaluation techniques.
+### 2. Run preprocessing
 
-## Getting Started
+```bash
+python preprocess.py
+```
 
-(Instructions on how to use the scripts, set up the environment, etc..)
+The preprocessing stage collects sequences, applies filtering logic, extracts biological features, and prepares the data for tokenizer training and model training.
 
-## Contributing
+### 3. Train tokenizer
 
-(Guidelines for contributing to the repository.)
+Open and run:
 
+```text
+tokenization.ipynb
+```
 
+This notebook trains a tokenizer over the biological sequence corpus. Depending on the experiment, this can be adapted to character-level, k-mer, BPE, or other tokenization strategies.
+
+### 4. Pretrain the model
+
+Open and run:
+
+```text
+Pretrained_mature_star_after_preprocess.ipynb
+```
+
+This stage trains a GPT-style model on the preprocessed sequence corpus.
+
+### 5. Fine-tune on human sequences
+
+Open and run:
+
+```text
+Human_fine_tune_star_mature.ipynb
+```
+
+This stage adapts the pretrained model to human-specific data.
+
+### 6. Generate and evaluate sequences
+
+Use the fine-tuned model to generate candidate sequences, then extract features using:
+
+```text
+Extract_features_only_nts.ipynb
+```
+
+## Suggested Evaluation Section to Add
+
+Add your final results here once you collect them:
+
+| Experiment | Tokenization | Training Data | Evaluation Signal | Result |
+|---|---|---|---|---|
+| Pretraining | TODO | TODO | TODO | TODO |
+| Human fine-tuning | TODO | TODO | TODO | TODO |
+| Generation | TODO | TODO | TODO | TODO |
+
+Good evaluation signals to include:
+
+- sequence length distribution
+- nucleotide composition
+- GC content
+- mature/star region validity
+- similarity to known sequences
+- duplicate rate
+- biological feature distribution compared to real data
+
+## Installation
+
+```bash
+conda create -n mirna-gpt python=3.10 -y
+conda activate mirna-gpt
+
+pip install pandas numpy scikit-learn matplotlib seaborn biopython
+pip install torch transformers tokenizers datasets accelerate
+```
+
+## Usage
+
+```bash
+python preprocess.py
+```
+
+Notebook order:
+
+```text
+1. tokenization.ipynb
+2. Pretrained_mature_star_after_preprocess.ipynb
+3. preprocess_clusters.ipynb
+4. Human_fine_tune_star_mature.ipynb
+5. Extract_features_only_nts.ipynb
+```
+
+## Engineering Notes
+
+This project treats biological sequence modeling as a language-modeling problem. The most important engineering choices are the tokenization strategy, data filtering, train/test split design, and biological evaluation after generation.
+
+## Future Work
+
+- Convert notebooks into CLI scripts
+- Add experiment tracking with Weights & Biases or MLflow
+- Add formal train/validation/test split reports
+- Add generated-sequence examples
+- Compare character-level, k-mer, and BPE tokenization
+- Add model cards for trained checkpoints
