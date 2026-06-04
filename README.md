@@ -114,16 +114,6 @@ Use the fine-tuned model to generate candidate sequences, then extract features 
 Extract_features_only_nts.ipynb
 ```
 
-## Suggested Evaluation Section to Add
-
-Add your final results here once you collect them:
-
-| Experiment | Tokenization | Training Data | Evaluation Signal | Result |
-|---|---|---|---|---|
-| Pretraining | TODO | TODO | TODO | TODO |
-| Human fine-tuning | TODO | TODO | TODO | TODO |
-| Generation | TODO | TODO | TODO | TODO |
-
 Good evaluation signals to include:
 
 - sequence length distribution
